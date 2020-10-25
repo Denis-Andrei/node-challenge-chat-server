@@ -41,6 +41,18 @@ app.get("/messages", function (req, res) {
     res.send(messages);
 });
 
+app.get("/messages/search", function (req, res) {
+  let searchedTerm = req.query.text;
+  res.send(filterBySearchedTerm(searchedTerm))
+});
+
+app.get("/messages/latest", function (req, res) {
+  let latestMessages;
+  messages.length > 10 ? latestMessages = messages.slice(messages.length-11,messages.length-1) : latestMessages = messages;
+  res.send(latestMessages);
+
+});
+
 app.get("/messages/:id", function (req, res) {
     const {id} = req.params;
     let filteredMessages = messages.filter(message => message.id == id);
@@ -57,4 +69,10 @@ app.delete("/messages/:id", function (req, res) {
     })
 });
 
+
+
 app.listen(3000);
+
+function filterBySearchedTerm(word){
+  return messages.filter(message => message.text.toLowerCase().includes(word.toLowerCase()))
+}
