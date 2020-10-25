@@ -27,9 +27,14 @@ app.get("/", function (req, res) {
 
 app.post("/messages", function (req, res) {
   const data = req.body; 
-  data.id = messages.length;
-  messages.push(data);
-  res.send('hello ' + data.from)
+  if(data.from.length > 0 && data.text.length ){
+    data.id = messages.length;
+    messages.push(data);
+    res.send('hello ' + data.from);
+  }else{
+    res.sendStatus(400);
+  }
+  
 });
 
 app.get("/messages", function (req, res) {
@@ -41,6 +46,7 @@ app.get("/messages/:id", function (req, res) {
     let filteredMessages = messages.filter(message => message.id == id);
     res.send(filteredMessages);
 });
+
 app.delete("/messages/:id", function (req, res) {
     const {id} = req.params;
     messages.forEach((item,index) => {
@@ -49,9 +55,6 @@ app.delete("/messages/:id", function (req, res) {
         res.send(`Message with the id ${id} was deleted`);
       }
     })
-   
-    
-    
 });
 
 app.listen(3000);
